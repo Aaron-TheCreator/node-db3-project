@@ -52,17 +52,16 @@ async function findById(scheme_id) { // EXERCISE B
     const newObj = {
       "scheme_id": `${scheme_id}`,
       "scheme_name": `${data[0].scheme_name}`,
-      "steps": data.map((step) => {
-        if (!step.step_id) {
-          this.steps = []
-        } else {
-          return {
-            "step_id": `${step.step_id}`,
-            "step_number": `${step.step_number}`,
-            "instructions": `${step.instructions}`
-          }
-        }
-      })
+      "steps": 
+        data[0].step_id !== null
+          ? data.map((step) => {
+              return {
+                "step_id": `${step.step_id}`,
+                "step_number": `${step.step_number}`,
+                "instructions": `${step.instructions}`
+              }
+            })
+          : []
     };
     return newObj;
   
@@ -176,25 +175,27 @@ async function add(scheme) { // EXERCISE D
  return newScheme;
 }
 
-// function addStep(scheme_id, step) { // EXERCISE E
-//   /*
-//     1E- This function adds a step to the scheme with the given `scheme_id`
-//     and resolves to _all the steps_ belonging to the given `scheme_id`,
-//     including the newly created one.
-//   */
-// }
-
-// module.exports = {
-//   find,
-//   findById,
-//   findSteps,
-//   add,
-//   addStep,
-// }
+async function addStep(scheme_id, step) { // EXERCISE E
+  /*
+    1E- This function adds a step to the scheme with the given `scheme_id`
+    and resolves to _all the steps_ belonging to the given `scheme_id`,
+    including the newly created one.
+  */
+ const response = await db('steps').insert(step);
+ if (response) {
+   console.log(`step with step_id:${response}`)
+ } else {
+   return
+ }
+ const newList = await findSteps(scheme_id);
+ return newList;
+}
 
 module.exports = {
   find,
   findById,
   findSteps,
   add,
+  addStep,
 }
+
