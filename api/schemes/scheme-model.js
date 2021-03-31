@@ -48,14 +48,19 @@ async function findById(scheme_id) { // EXERCISE B
       .where('sc.scheme_id', scheme_id)
       .orderBy('st.step_number');
 
+    
     const newObj = {
       "scheme_id": `${scheme_id}`,
       "scheme_name": `${data[0].scheme_name}`,
       "steps": data.map((step) => {
-        return {
-          step_id: step.step_id,
-          step_number: step.step_number,
-          instructions: step.instructions
+        if (!step.step_id) {
+          this.steps = []
+        } else {
+          return {
+            "step_id": `${step.step_id}`,
+            "step_number": `${step.step_number}`,
+            "instructions": `${step.instructions}`
+          }
         }
       })
     };
@@ -133,7 +138,7 @@ async function findById(scheme_id) { // EXERCISE B
 
 function findSteps(scheme_id) {
   
-  db('steps')
+  db('steps as st').where('')
   // EXERCISE C
   /*
     1C- Build a query in Knex that returns the following data.
