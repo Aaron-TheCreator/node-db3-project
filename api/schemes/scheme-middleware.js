@@ -59,7 +59,14 @@ const validateScheme = (req, res, next) => {
   }
 */
 const validateStep = (req, res, next) => {
-
+  const newStep = req.body;
+  if (!newStep.instructions || newStep.instructions === "" || typeof(newStep.instructions) != 'string') {
+    next(new ExpressError('invalid step', 400));
+  } else if (newStep.step_number === NaN || newStep.step_number > 1) {
+    next(new ExpressError('invalid step', 400));
+  } else {
+    next();
+  }
 }
 
 module.exports = {

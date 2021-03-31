@@ -138,7 +138,12 @@ async function findById(scheme_id) { // EXERCISE B
 
 function findSteps(scheme_id) {
   
-  db('steps as st').where('')
+  return db.select('step_id','step_number', 'instructions', 'scheme_name')
+    .from('schemes as sc')
+    .join('steps as st', 'sc.scheme_id', 'st.scheme_id')
+    .where('sc.scheme_id', `${scheme_id}`)
+    .orderBy('st.step_number')
+    
   // EXERCISE C
   /*
     1C- Build a query in Knex that returns the following data.
@@ -186,5 +191,6 @@ function findSteps(scheme_id) {
 
 module.exports = {
   find,
-  findById
+  findById,
+  findSteps
 }
